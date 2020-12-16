@@ -1,0 +1,44 @@
+[package]
+authors = ["Guillem Cordoba <guillem.cordoba@gmail.com>"]
+edition = "2018"
+name = "bundle_dna"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+anyhow = "1.0"
+flate2 = "1.0.14"
+holo_hash = {git = "https://github.com/holochain/holochain", rev = "3a437ba", package = "holo_hash", features = ["hashing"]}
+holochain_serialized_bytes = "=0.0.45"
+holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "3a437ba", package = "holochain_zome_types"}
+js-sys = "0.3.46"
+serde = {version = "1.0.104", features = ["derive", "rc"]}
+serde_json = {version = "1.0.51", features = ["preserve_order"]}
+thiserror = "1.0.22"
+wasm-bindgen = {version = "0.2.63", features = ["serde-serialize"]}
+wasm-bindgen-futures = "0.4.19"
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = {version = "0.1.6", optional = true}
+
+# `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
+# compared to the default allocator's ~10K. It is slower than the default
+# allocator, however.
+#
+# Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
+wee_alloc = {version = "0.4.5", optional = true}
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.13"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
