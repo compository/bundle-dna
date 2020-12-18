@@ -3,7 +3,7 @@ mod utils;
 
 use std::convert::TryInto;
 
-use holo_hash::{HasHash, WasmHash};
+use holo_hash::{DnaHash, HasHash, WasmHash};
 use holochain_zome_types::zome::ZomeName;
 use js_sys::Uint8Array;
 use serde::{Deserialize, Serialize};
@@ -38,6 +38,12 @@ pub async fn bundle_dna(
     wasms: JsValue,
 ) -> js_sys::Promise {
     future_to_promise(internal_bundle_dna(name, uuid, properties, zomes, wasms))
+}
+
+#[derive(Serialize, Deserialize)]
+struct BundleDnaResult {
+    bundled_dna_file: Vec<u8>,
+    dna_hash: DnaHash,
 }
 
 async fn internal_bundle_dna(
@@ -79,7 +85,12 @@ async fn internal_bundle_dna(
         "Failed to compile the dna file to contents",
     )))?;
 
-    let array: Uint8Array = contents.as_slice().into();
+    let result = BundleDnaResult {
+        bundled_dna_file: contents,
+        dna_hash: file.dna_hash().clone(),
+    };
 
-    Ok(JsValue::from(array))
+    JsValue::from_serde(&result).or(Err(JsValue::from_str(
+        "Failed to serialize dna file contents",
+    )))
 }

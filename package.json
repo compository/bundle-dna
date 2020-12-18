@@ -2,10 +2,6 @@
   "name": "bundle-dna",
   "version": "1.0.0",
   "description": "<div align=\"center\">",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "publish-to-branch": "gh-pages -d pkg -b build"
   },
