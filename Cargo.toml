@@ -13,9 +13,9 @@ default = ["console_error_panic_hook"]
 [dependencies]
 anyhow = "1.0"
 flate2 = "1.0.14"
-holo_hash = {git = "https://github.com/holochain/holochain", rev = "3a437ba", package = "holo_hash", features = ["hashing"]}
-holochain_serialized_bytes = "=0.0.45"
-holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "3a437ba", package = "holochain_zome_types"}
+holo_hash = {git = "https://github.com/holochain/holochain", rev = "3675b58", package = "holo_hash", features = ["hashing"]}
+holochain_serialized_bytes = "=0.0.46"
+holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "3675b58", package = "holochain_zome_types"}
 js-sys = "0.3.46"
 serde = {version = "1.0.104", features = ["derive", "rc"]}
 serde_json = {version = "1.0.51", features = ["preserve_order"]}
