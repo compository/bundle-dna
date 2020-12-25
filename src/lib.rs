@@ -81,16 +81,15 @@ async fn internal_bundle_dna(
         .await
         .or(Err(JsValue::from_str("Failed to build DnaFile")))?;
 
-/*     let contents = file.to_file_content().await.or(Err(JsValue::from_str(
-        "Failed to compile the dna file to contents",
-    )))?;
+    /*     let contents = file.to_file_content().await.or(Err(JsValue::from_str(
+           "Failed to compile the dna file to contents",
+       )))?;
 
-    let result = BundleDnaResult {
-        bundled_dna_file: contents,
-        dna_hash: file.dna_hash().clone(),
-    };
- */
-    JsValue::from_serde(&file).or(Err(JsValue::from_str(
-        "Failed to serialize dna file contents",
-    )))
+       let result = BundleDnaResult {
+           bundled_dna_file: contents,
+           dna_hash: file.dna_hash().clone(),
+       };
+    */
+    JsValue::from_serde(&file)
+        .map_err(|e| JsValue::from_str(format!("Failed to serialize dna file contents {:?}, {:?}", e, file).as_str()))
 }

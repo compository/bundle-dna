@@ -82,7 +82,7 @@ pub type DnaDefHashed = HoloHashed<DnaDef>;
 impl_hashable_content!(DnaDef, Dna);
 
 /// Wasms need to be an ordered map from WasmHash to a wasm::DnaWasm
-pub type Wasms = BTreeMap<holo_hash::WasmHash, wasm::DnaWasm>;
+pub type Wasms = Vec<(holo_hash::WasmHash, wasm::DnaWasm)>;
 
 /// Represents a full DNA file including WebAssembly bytecode.
 #[derive(Serialize, Deserialize, Clone, PartialEq, Eq, SerializedBytes)]
@@ -109,10 +109,10 @@ impl DnaFile {
         dna: DnaDef,
         wasm: impl IntoIterator<Item = wasm::DnaWasm>,
     ) -> Result<Self, DnaError> {
-        let mut code = BTreeMap::new();
+        let mut code = Vec::new();
         for wasm in wasm {
             let wasm_hash = holo_hash::WasmHash::with_data(&wasm).await;
-            code.insert(wasm_hash, wasm);
+            code.push((wasm_hash, wasm));
         }
         let dna = DnaDefHashed::from_content(dna).await;
         Ok(Self { dna, code })
@@ -158,7 +158,7 @@ impl DnaFile {
     }
 
     /// The bytes of the WASM zomes referenced in the Dna portion.
-    pub fn code(&self) -> &BTreeMap<holo_hash::WasmHash, wasm::DnaWasm> {
+    pub fn code(&self) -> &Vec<(holo_hash::WasmHash, wasm::DnaWasm)> {
         &self.code
     }
 

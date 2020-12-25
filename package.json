@@ -2,11 +2,11 @@
   "name": "bundle-dna",
   "version": "1.0.0",
   "description": "<div align=\"center\">",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "./index.js",
+  "module": "./index.js",
   "scripts": {
-    "build": "rimraf dist && rollup -c rollup.config.js",
-    "publish-to-branch": "npm run build && gh-pages -d ./ -b build"
+    "build": "rimraf dist && rollup -c rollup.config.js && cp ./index.d.ts ./dist",
+    "publish-to-branch": "npm run build && cp package.json dist && gh-pages -d dist -b build"
   },
   "repository": {
     "type": "git",
