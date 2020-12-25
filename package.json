@@ -5,7 +5,7 @@
   "main": "./index.js",
   "module": "./index.js",
   "scripts": {
-    "build": "rimraf dist && rollup -c rollup.config.js",
+    "build": "rimraf dist && rollup -c rollup.config.js && cp ./index.d.ts ./dist",
     "publish-to-branch": "npm run build && cp package.json dist && gh-pages -d dist -b build"
   },
   "repository": {
