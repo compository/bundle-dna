@@ -14,4 +14,19 @@ export function bundle_dna(
   properties: any,
   zomes: any,
   wasms: any
-): any;
+): Promise<DnaFile>;
+
+export interface DnaFile {
+  dna: {
+    content: {
+      name: String;
+      uuid: String;
+      properties: Array<number>;
+      zomes: Array<[string, { wasm_hash: Array<number> }]>;
+    };
+    hash: Array<number>;
+  };
+  code: Array<WasmCode>;
+}
+
+export type WasmCode = [Array<number>, { code: Array<number> }];
