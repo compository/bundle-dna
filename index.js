@@ -396,7 +396,7 @@ const base64codes = [62,0,0,0,63,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0,0,0,0,1
                         return exports;
                     };
 
-var index = { bundle_dna: wasm$1.bundle_dna };
+const bundle_dna$1 = wasm$1.bundle_dna;
 
-export default index;
+export { bundle_dna$1 as bundle_dna };
 //# sourceMappingURL=index.js.map
