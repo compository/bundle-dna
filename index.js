@@ -396,7 +396,10 @@ const base64codes = [62,0,0,0,63,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0,0,0,0,1
                         return exports;
                     };
 
-const bundle_dna$1 = wasm$1.bundle_dna;
+async function bundle_dna$1(...args) {
+  const e = await wasm$1();
+  return e(...args);
+}
 
 export { bundle_dna$1 as bundle_dna };
 //# sourceMappingURL=index.js.map
