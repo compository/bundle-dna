@@ -81,7 +81,7 @@ async fn internal_bundle_dna(
         .await
         .or(Err(JsValue::from_str("Failed to build DnaFile")))?;
 
-    let contents = file.to_file_content().await.or(Err(JsValue::from_str(
+/*     let contents = file.to_file_content().await.or(Err(JsValue::from_str(
         "Failed to compile the dna file to contents",
     )))?;
 
@@ -89,8 +89,8 @@ async fn internal_bundle_dna(
         bundled_dna_file: contents,
         dna_hash: file.dna_hash().clone(),
     };
-
-    JsValue::from_serde(&result).or(Err(JsValue::from_str(
+ */
+    JsValue::from_serde(&file).or(Err(JsValue::from_str(
         "Failed to serialize dna file contents",
     )))
 }
