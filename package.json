@@ -7,6 +7,7 @@
   "files": [
     "bundle_dna_bg.wasm",
     "bundle_dna.js",
+    "bundle_dna_bg.js",
     "bundle_dna.d.ts"
   ],
   "module": "bundle_dna.js",
