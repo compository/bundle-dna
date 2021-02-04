@@ -10,22 +10,43 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = ["console_error_panic_hook"]
 
+fixturators = ["holochain_zome_types/fixturators"]
+test_utils = ["holochain_zome_types/test_utils"]
+
 [dependencies]
-anyhow = "1.0"
+anyhow = "1.0.26"
+async-trait = "0.1"
+backtrace = "0.3.27"
+base64 = "0.10.1"
+chrono = "0.4.6"
+derive_builder = "0.9.0"
+derive_more = "0.99.3"
+fixt = {git = "https://github.com/holochain/holochain", rev = "fd8049a", package = "fixt"}
 flate2 = "1.0.14"
-holo_hash = {git = "https://github.com/holochain/holochain", rev = "78adfa99cda284f254d6e3c8ee76b74ed7de49a6", package = "holo_hash", features = ["hashing"]}
+futures = "0.3"
+holo_hash = {git = "https://github.com/holochain/holochain", rev = "fd8049a", package = "holo_hash", features = ["hashing"]}
 holochain_serialized_bytes = "=0.0.48"
-holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "78adfa99cda284f254d6e3c8ee76b74ed7de49a6", package = "holochain_zome_types"}
+holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "fd8049a", package = "holochain_zome_types"}
 js-sys = "0.3.46"
+lazy_static = "1.4.0"
+must_future = "0.1.1"
+nanoid = "0.3"
+observability = "0.1.3"
+rand = "0.7"
+regex = "1.1.2"
 serde = {version = "1.0.104", features = ["derive", "rc"]}
+serde_bytes = "0.11"
+serde_derive = "1.0.104"
 serde_json = {version = "1.0.51", features = ["preserve_order"]}
+shrinkwraprs = "0.3.0"
+strum = "0.18.0"
+tempdir = "0.3.7"
 thiserror = "1.0.22"
+tracing = "=0.1.21"
 wasm-bindgen = {version = "0.2.63", features = ["serde-serialize"]}
 wasm-bindgen-futures = "0.4.19"
-derive_builder = "0.9.0"
-nanoid = "0.3"
-backtrace = "0.3.27"
-tracing = "=0.1.21"
+tokio = {version = "0.2", features = ["blocking"]}
+tokio_safe_block_on = "0.1.2"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -41,6 +62,7 @@ console_error_panic_hook = {version = "0.1.6", optional = true}
 wee_alloc = {version = "0.4.5", optional = true}
 
 [dev-dependencies]
+maplit = "1"
 wasm-bindgen-test = "0.3.13"
 
 [profile.release]

@@ -6,18 +6,33 @@
 //! using Rust closures, and is useful for quickly defining zomes on-the-fly
 //! for tests.
 
-use holo_hash::WasmHash;
+use derive_more::Constructor;
 use holochain_serialized_bytes::prelude::*;
 use holochain_zome_types::zome::ZomeName;
 use std::sync::Arc;
-use wasm_bindgen::prelude::*;
 
-use super::{error::DnaResult, DnaError};
+use self::inline_zome::InlineZome;
 
+use super::error::DnaResult;
+use super::DnaError;
+
+pub mod inline_zome;
 /// A Holochain Zome. Includes the ZomeDef as well as the name of the Zome.
-#[derive(Serialize, Deserialize, Hash, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(
+    Serialize,
+    Deserialize,
+    Hash,
+    Clone,
+    Debug,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    shrinkwraprs::Shrinkwrap,
+)]
 pub struct Zome {
     name: ZomeName,
+    #[shrinkwrap(main_field)]
     def: ZomeDef,
 }
 
@@ -78,14 +93,66 @@ impl From<Zome> for ZomeDef {
 /// again.
 ///
 /// In particular, a real-world DnaFile should only ever contain Wasm zomes!
-#[derive(Serialize, Deserialize, Hash, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-#[repr(transparent)]
-pub struct ZomeDef {
-    pub wasm_hash: WasmHash,
+#[derive(
+    Serialize, Deserialize, Hash, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::From,
+)]
+// This can be untagged, since the only valid serialization target is WasmZome
+#[serde(untagged, into = "ZomeDefSerialized")]
+pub enum ZomeDef {
+    /// A zome defined by Wasm bytecode
+    Wasm(WasmZome),
+
+    /// A zome defined by Rust closures. Cannot be deserialized.
+    #[serde(skip_deserializing)]
+    Inline(Arc<InlineZome>),
+}
+
+/// The serialized form of a ZomeDef, which is identical for Wasm zomes, but
+/// unwraps InlineZomes to just a bare UUID.
+#[derive(Serialize)]
+#[serde(untagged)]
+enum ZomeDefSerialized {
+    Wasm(WasmZome),
+    InlineUuid(String),
+}
+
+impl From<ZomeDef> for ZomeDefSerialized {
+    fn from(d: ZomeDef) -> Self {
+        match d {
+            ZomeDef::Wasm(zome) => Self::Wasm(zome),
+            ZomeDef::Inline(zome) => Self::InlineUuid(zome.uuid.clone()),
+        }
+    }
+}
+
+impl From<InlineZome> for ZomeDef {
+    fn from(iz: InlineZome) -> Self {
+        Self::Inline(Arc::new(iz))
+    }
+}
+
+impl ZomeDef {
+    /// If this is a Wasm zome, return the WasmHash.
+    /// If not, return an error with the provided zome name
+    pub fn wasm_hash(&self, zome_name: &ZomeName) -> DnaResult<holo_hash::WasmHash> {
+        match self {
+            ZomeDef::Wasm(WasmZome { wasm_hash }) => Ok(wasm_hash.clone()),
+            _ => Err(DnaError::NonWasmZome(zome_name.clone())),
+        }
+    }
+}
+
+/// A zome defined by Wasm bytecode
+#[derive(
+    Serialize, Deserialize, Hash, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, SerializedBytes,
+)]
+pub struct WasmZome {
+    /// The WasmHash representing the WASM byte code for this zome.
+    pub wasm_hash: holo_hash::WasmHash,
 }
 
 /// Access a call has to host functions
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, Constructor, PartialEq)]
 pub struct HostFnAccess {
     /// Can access agent information
     pub agent_info: Permission,
@@ -111,13 +178,13 @@ pub enum Permission {
     /// Host functions with this access will be unreachable
     Deny,
 }
-/*
+
 impl ZomeDef {
     /// create a Zome from a holo_hash WasmHash instead of a holo_hash one
     pub fn from_hash(wasm_hash: holo_hash::WasmHash) -> Self {
         WasmZome { wasm_hash }.into()
     }
-} */
+}
 
 impl HostFnAccess {
     /// Allow all access

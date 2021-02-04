@@ -1,15 +1,15 @@
-//! holochain_types::dna::wasm is a module for managing webassembly code
+//! crate::dna::wasm is a module for managing webassembly code
 //!  - within the in-memory dna struct
 //!  - and serialized to json
+use backtrace::Backtrace;
 use holo_hash::*;
 use holochain_serialized_bytes::prelude::*;
-use backtrace::Backtrace;
-use serde::{Deserialize, Serialize};
-use std::{
-    fmt,
-    hash::{Hash, Hasher},
-    sync::Arc,
-};
+use serde::Deserialize;
+use serde::Serialize;
+use std::fmt;
+use std::hash::Hash;
+use std::hash::Hasher;
+use std::sync::Arc;
 use tracing::*;
 
 /// Represents web assembly code.

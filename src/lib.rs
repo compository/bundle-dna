@@ -63,7 +63,12 @@ async fn internal_bundle_dna(
     for (index, zome) in szomes.0.iter().enumerate() {
         let computed_hash = WasmHash::with_data(&swasms.0[index]).await;
 
-        if !computed_hash.eq(&zome.1.wasm_hash) {
+        let wasm_hash = zome
+            .1
+            .wasm_hash(&zome.0)
+            .map_err(|e| JsValue::from_str("Couldn't get the wasm_hash for this zome"))?;
+
+        if !computed_hash.eq(&wasm_hash) {
             return Err(JsValue::from_str(
                 "Hash of the zome code doesn't match the received wasm hash",
             ));
@@ -90,6 +95,9 @@ async fn internal_bundle_dna(
            dna_hash: file.dna_hash().clone(),
        };
     */
-    JsValue::from_serde(&file)
-        .map_err(|e| JsValue::from_str(format!("Failed to serialize dna file contents {:?}, {:?}", e, file).as_str()))
+    JsValue::from_serde(&file).map_err(|e| {
+        JsValue::from_str(
+            format!("Failed to serialize dna file contents {:?}, {:?}", e, file).as_str(),
+        )
+    })
 }
