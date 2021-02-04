@@ -32,7 +32,10 @@ impl JsonProperties {
 }
 
 /// Represents the top-level holochain dna object.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, SerializedBytes)]
+#[derive(
+    Serialize, Deserialize, Clone, Debug, PartialEq, Eq, SerializedBytes, derive_builder::Builder,
+)]
+#[builder(public)]
 pub struct DnaDef {
     /// The friendly "name" of a Holochain DNA.
     pub name: String,
@@ -73,6 +76,18 @@ impl DnaDef {
                     Err(DnaError::NonWasmZome(zome_name.clone()))
                 }
             })
+    }
+}
+
+fn random_uuid() -> String {
+    nanoid::nanoid!()
+}
+
+impl DnaDefBuilder {
+    /// Provide a random UUID
+    pub fn random_uuid(&mut self) -> &mut Self {
+        self.uuid = Some(random_uuid());
+        self
     }
 }
 

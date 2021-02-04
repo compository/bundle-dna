@@ -13,15 +13,17 @@ default = ["console_error_panic_hook"]
 [dependencies]
 anyhow = "1.0"
 flate2 = "1.0.14"
-holo_hash = {git = "https://github.com/holochain/holochain", rev = "3675b58", package = "holo_hash", features = ["hashing"]}
-holochain_serialized_bytes = "=0.0.46"
-holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "3675b58", package = "holochain_zome_types"}
+holo_hash = {git = "https://github.com/holochain/holochain", rev = "5daac31fe21f5d10c192bbe208f0b11f8ee67d88", package = "holo_hash", features = ["hashing"]}
+holochain_serialized_bytes = "=0.0.47"
+holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "5daac31fe21f5d10c192bbe208f0b11f8ee67d88", package = "holochain_zome_types"}
 js-sys = "0.3.46"
 serde = {version = "1.0.104", features = ["derive", "rc"]}
 serde_json = {version = "1.0.51", features = ["preserve_order"]}
 thiserror = "1.0.22"
 wasm-bindgen = {version = "0.2.63", features = ["serde-serialize"]}
 wasm-bindgen-futures = "0.4.19"
+derive_builder = "0.9.0"
+nanoid = "0.3"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
