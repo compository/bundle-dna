@@ -1,3 +1,4 @@
+import { DnaFile } from "@holochain/conductor-api";
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -15,18 +16,3 @@ export function bundle_dna(
   zomes: any,
   wasms: any
 ): Promise<DnaFile>;
-
-export interface DnaFile {
-  dna: {
-    content: {
-      name: String;
-      uuid: String;
-      properties: Array<number>;
-      zomes: Array<[string, { wasm_hash: Array<number> }]>;
-    };
-    hash: Array<number>;
-  };
-  code: Array<WasmCode>;
-}
-
-export type WasmCode = [Array<number>, { code: Array<number> }];
